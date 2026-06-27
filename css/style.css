@@ -143,6 +143,38 @@ html, body {
 .trace-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .trace-canvas.draw { touch-action: none; }
 
+/* 書き順アニメーション（再生中だけ表示。なぞり書きの上に重なる） */
+.stroke-anim {
+  position: absolute;
+  inset: 0;
+  display: none;
+  background: rgba(255, 255, 255, 0.85); /* 再生中は下のお手本を隠してアニメに集中 */
+  pointer-events: none;
+}
+.stroke-anim.playing { display: block; }
+.stroke-svg { width: 100%; height: 100%; }
+/* 全画のうすいお手本 */
+.stroke-ghost {
+  fill: none;
+  stroke: rgba(120, 120, 140, 0.18);
+  stroke-width: 6.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* 実際に描かれていく線（ピンク） */
+.stroke-active {
+  fill: none;
+  stroke: #ff6fa5;
+  stroke-width: 6.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* ペン先の点 */
+.stroke-pen { fill: #4d96ff; transition: opacity 0.15s; }
+/* 画の番号 */
+.stroke-num circle { fill: #4d96ff; }
+.stroke-num text { fill: #fff; font-size: 9px; font-weight: bold; font-family: sans-serif; }
+
 .practice-controls { text-align: center; margin-top: 18px; }
 .action-btn {
   border: none;

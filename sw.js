@@ -3,7 +3,7 @@
 // （iPadで「ホーム画面に追加」したあと、ネットがなくても起動できる）
 // ============================================================
 
-const CACHE = "hiragana-v1"; // 中身を更新したらバージョンを上げる
+const CACHE = "hiragana-v2"; // 中身を更新したらバージョンを上げる
 
 // 最初にキャッシュしておくファイル一覧
 const ASSETS = [
@@ -15,6 +15,8 @@ const ASSETS = [
   "./js/speech.js",
   "./js/audio.js",
   "./js/trace.js",
+  "./js/strokes.js",
+  "./js/strokeAnim.js",
   "./manifest.webmanifest",
   "./icons/icon.svg",
 ];

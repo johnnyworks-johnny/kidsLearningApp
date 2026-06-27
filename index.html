@@ -42,13 +42,16 @@
     <!-- なぞり進捗バー -->
     <div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div>
 
-    <!-- なぞり書きエリア（お手本と描画キャンバスを重ねる） -->
+    <!-- なぞり書きエリア（お手本・描画キャンバス・書き順アニメを重ねる） -->
     <div class="trace-area">
       <canvas id="guide-canvas" class="trace-canvas"></canvas>
       <canvas id="draw-canvas" class="trace-canvas draw"></canvas>
+      <!-- 書き順アニメーションのSVGがここに入る（再生中だけ表示） -->
+      <div id="stroke-anim" class="stroke-anim"></div>
     </div>
 
     <div class="practice-controls">
+      <button id="btn-stroke" class="action-btn">✏️ かきじゅん</button>
       <button id="btn-clear" class="action-btn">🧽 けす</button>
     </div>
   </section>
