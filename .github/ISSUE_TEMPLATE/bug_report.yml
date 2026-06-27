@@ -1,0 +1,30 @@
+name: 🐛 バグ報告
+description: うまく動かない・おかしいところを報告する
+title: "[バグ] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: どんな問題が起きましたか？
+      description: 起きたことをかんたんに書いてください
+      placeholder: 例）「あ」をなぞっても せいかいにならない
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 再現の手順
+      placeholder: |
+        1. ホームで「あ」をえらぶ
+        2. なぞる
+        3. ...
+    validations:
+      required: false
+  - type: input
+    id: device
+    attributes:
+      label: つかった端末・ブラウザ
+      placeholder: 例）iPad / Safari
+    validations:
+      required: false

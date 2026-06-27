@@ -1,0 +1,29 @@
+name: ✨ 機能要望・改善
+description: あったらいい機能や、こうしてほしい改善を提案する
+title: "[要望] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: どんな機能・改善がほしいですか？
+      placeholder: 例）書き順をアニメーションで見せてほしい
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: なぜほしいですか？（あれば）
+      placeholder: 例）正しい書き順がわかると もっと練習になる
+    validations:
+      required: false
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 優先度
+      options:
+        - 低（あったらうれしい）
+        - 中
+        - 高（早めにほしい）
+    validations:
+      required: false
