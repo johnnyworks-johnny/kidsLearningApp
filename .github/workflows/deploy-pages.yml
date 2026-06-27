@@ -1,0 +1,44 @@
+# ============================================================
+# main ブランチに push されたら GitHub Pages に自動デプロイする
+# 静的サイトなのでビルド不要。ファイルをそのままアップロードするだけ。
+# ============================================================
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # 手動実行もできるようにする
+  workflow_dispatch:
+
+# Pages デプロイに必要な権限
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同時デプロイを防ぐ（1つ前のデプロイが終わるまで待つ）
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: ソースを取得
+        uses: actions/checkout@v4
+
+      - name: Pages の設定
+        uses: actions/configure-pages@v5
+
+      - name: サイトをアップロード
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+
+      - name: Pages にデプロイ
+        id: deployment
+        uses: actions/deploy-pages@v4
