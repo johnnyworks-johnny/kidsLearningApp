@@ -2,12 +2,13 @@
 // アプリ本体：画面の切り替え・進捗管理・成功演出をまとめる
 // ============================================================
 import { GOJUON_ROWS, HIRAGANA, KANA_ORDER } from "./data.js";
-import { initSpeech, speak } from "./speech.js";
-import { playSuccess, playTap } from "./audio.js";
+import { initSpeech, speak, setSpeechMuted } from "./speech.js";
+import { playSuccess, playTap, setAudioMuted } from "./audio.js";
 import { TracePad } from "./trace.js";
 import { StrokeAnimator } from "./strokeAnim.js";
 
 const STORAGE_KEY = "hiragana-progress-v1";
+const SOUND_KEY = "hiragana-sound-v1"; // 音の設定保存キー
 
 // ---- 進捗（クリアした文字）の保存・読み込み ----
 function loadProgress() {
@@ -25,6 +26,7 @@ let progress = loadProgress();
 let currentKana = null;
 let pad = null;
 let strokeAnimator = null; // 書き順アニメーション
+let soundOn = true;        // 効果音・読み上げが有効かどうか
 
 // 主要なDOM要素
 const el = {
@@ -41,6 +43,30 @@ const el = {
   vocabEmoji: document.getElementById("vocab-emoji"),
   vocabWord: document.getElementById("vocab-word"),
 };
+
+// ============================================================
+// 効果音・音声のオン/オフ管理（Issue #5）
+// ============================================================
+// 保存された設定を読み込む（デフォルトはON）
+function loadSoundSetting() {
+  try {
+    const v = localStorage.getItem(SOUND_KEY);
+    return v === null ? true : v === "1";
+  } catch { return true; }
+}
+// 設定を保存し、各モジュールに反映する
+function applySoundSetting(on) {
+  soundOn = on;
+  localStorage.setItem(SOUND_KEY, on ? "1" : "0");
+  setAudioMuted(!on);
+  setSpeechMuted(!on);
+  // ボタンの表示を更新（🔊 = ON、🔇 = OFF）
+  const btn = document.getElementById("btn-sound-toggle");
+  if (btn) {
+    btn.textContent = on ? "🔊" : "🔇";
+    btn.classList.toggle("off", !on);
+  }
+}
 
 // ============================================================
 // ホーム画面：五十音表をつくる
@@ -239,10 +265,17 @@ function wireButtons() {
     el.overlay.classList.remove("active");
     backToHome();
   });
+
+  // 効果音・音声のオン/オフトグル
+  document.getElementById("btn-sound-toggle").addEventListener("click", () => {
+    applySoundSetting(!soundOn);
+  });
 }
 
 function init() {
   initSpeech();
+  // 前回の音設定を復元（ミュートしていた場合はそのまま維持）
+  applySoundSetting(loadSoundSetting());
   buildHome();
   wireButtons();
 

@@ -23,7 +23,11 @@
     <header class="home-header">
       <h1>ひらがな れんしゅう</h1>
       <p class="subtitle">すきな もじを えらんでね</p>
-      <div class="done-badge">クリア <span id="done-count">0 / 46</span></div>
+      <div class="home-header-row">
+        <div class="done-badge">クリア <span id="done-count">0 / 46</span></div>
+        <!-- 効果音・音声のオン/オフトグル -->
+        <button id="btn-sound-toggle" class="sound-toggle" aria-label="おとの オン/オフ">🔊</button>
+      </div>
     </header>
     <!-- 五十音のマスはJSで生成 -->
     <div id="gojuon" class="gojuon"></div>
