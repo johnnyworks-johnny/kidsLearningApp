@@ -1,0 +1,54 @@
+# ============================================================
+# PRに対する自動チェック（CI）
+#   - JS構文チェック（壊れたコードがマージされるのを防ぐ）
+#   - 基本的なファイル整合性チェック
+# ============================================================
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ソースを取得
+        uses: actions/checkout@v4
+
+      - name: JS 構文チェック
+        run: |
+          echo "=== JS構文チェック ==="
+          FAIL=0
+          for f in $(find . -name '*.js' -not -path './.git/*' -not -path './node_modules/*'); do
+            if ! node --check "$f" 2>&1; then
+              echo "❌ $f"
+              FAIL=1
+            else
+              echo "✅ $f"
+            fi
+          done
+          exit $FAIL
+
+      - name: ひらがなデータの整合性チェック
+        run: |
+          echo "=== データチェック ==="
+          node -e "
+            import('./js/strokes.js').then(m => {
+              const count = Object.keys(m.STROKES).length;
+              const bad = Object.entries(m.STROKES).filter(([k,v]) => !v.length);
+              console.log('文字数:', count);
+              if (count < 46) { console.error('❌ 46文字未満'); process.exit(1); }
+              if (bad.length) { console.error('❌ 画数0:', bad.map(b=>b[0])); process.exit(1); }
+              console.log('✅ データOK');
+            }).catch(e => { console.error('❌ インポート失敗:', e.message); process.exit(1); });
+          "
+
+      - name: 必須ファイルの存在チェック
+        run: |
+          echo "=== 必須ファイルチェック ==="
+          FAIL=0
+          for f in index.html css/style.css js/app.js js/data.js js/trace.js js/speech.js manifest.webmanifest sw.js; do
+            if [ -f "$f" ]; then echo "✅ $f"; else echo "❌ $f が見つからない"; FAIL=1; fi
+          done
+          exit $FAIL
