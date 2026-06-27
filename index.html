@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <!-- iPadで全画面・拡大縮小無効（指でなぞる時にピンチズームしないように） -->
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="ひらがな" />
+  <meta name="theme-color" content="#fff7e6" />
+  <title>ひらがな れんしゅう</title>
+
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="./icons/icon.svg" />
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+  <!-- ========== ホーム画面：五十音表 ========== -->
+  <section id="screen-home" class="screen active">
+    <header class="home-header">
+      <h1>ひらがな れんしゅう</h1>
+      <p class="subtitle">すきな もじを えらんでね</p>
+      <div class="done-badge">クリア <span id="done-count">0 / 46</span></div>
+    </header>
+    <!-- 五十音のマスはJSで生成 -->
+    <div id="gojuon" class="gojuon"></div>
+  </section>
+
+  <!-- ========== 練習画面：なぞり書き ========== -->
+  <section id="screen-practice" class="screen">
+    <header class="practice-header">
+      <button id="btn-back" class="round-btn">◀ もどる</button>
+      <div class="practice-title">
+        <span id="practice-kana" class="title-kana">あ</span>
+        <span id="practice-romaji" class="title-romaji">a</span>
+      </div>
+      <button id="btn-speak" class="round-btn">🔊 きく</button>
+    </header>
+
+    <!-- なぞり進捗バー -->
+    <div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div>
+
+    <!-- なぞり書きエリア（お手本・描画キャンバス・書き順アニメを重ねる） -->
+    <div class="trace-area">
+      <canvas id="guide-canvas" class="trace-canvas"></canvas>
+      <canvas id="draw-canvas" class="trace-canvas draw"></canvas>
+      <!-- 書き順アニメーションのSVGがここに入る（再生中だけ表示） -->
+      <div id="stroke-anim" class="stroke-anim"></div>
+    </div>
+
+    <div class="practice-controls">
+      <button id="btn-stroke" class="action-btn">✏️ かきじゅん</button>
+      <button id="btn-clear" class="action-btn">🧽 けす</button>
+    </div>
+  </section>
+
+  <!-- ========== 成功演出オーバーレイ ========== -->
+  <div id="overlay-success" class="overlay">
+    <canvas id="confetti" class="confetti"></canvas>
+    <div class="success-card">
+      <div id="praise-text" class="praise">すごい！</div>
+      <div class="vocab">
+        <div id="vocab-emoji" class="vocab-emoji">🐜</div>
+        <div class="vocab-word-row">
+          <span id="vocab-word" class="vocab-word">あり</span>
+          <button id="btn-vocab-speak" class="round-btn small">🔊</button>
+        </div>
+      </div>
+      <div class="success-actions">
+        <button id="btn-retry" class="action-btn">🔁 もういちど</button>
+        <button id="btn-next" class="action-btn primary">つぎのもじ ▶</button>
+        <button id="btn-overlay-home" class="action-btn">🏠 ひょう</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
