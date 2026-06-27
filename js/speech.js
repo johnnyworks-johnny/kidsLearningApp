@@ -5,15 +5,23 @@
 
 let jaVoice = null; // 選ばれた日本語の声をキャッシュ
 
-// 利用可能な声の一覧から、日本語(ja)の声を1つ選ぶ
+// 利用可能な声の一覧から、一番自然な日本語の声を選ぶ
 // ※iOS/Safari では声の読み込みが非同期なので voiceschanged を待つ
+// 優先順位: Enhanced/Premium → 通常の ja-JP → ja で始まるもの
 function pickJapaneseVoice() {
   const voices = window.speechSynthesis.getVoices();
-  // ja-JP を優先、なければ ja で始まるものを使う
+  const jaVoices = voices.filter(
+    (v) => v.lang && v.lang.toLowerCase().startsWith("ja")
+  );
+  if (!jaVoices.length) { jaVoice = null; return; }
+
+  // iOS/macOS では "Enhanced" や "Premium" が付いた高品質ボイスがある
+  // ローカル(オフライン)の高品質 → ネットワーク高品質 → 通常 の順に探す
   jaVoice =
-    voices.find((v) => v.lang === "ja-JP") ||
-    voices.find((v) => v.lang && v.lang.toLowerCase().startsWith("ja")) ||
-    null;
+    jaVoices.find((v) => /enhanced|premium/i.test(v.name) && v.localService) ||
+    jaVoices.find((v) => /enhanced|premium/i.test(v.name)) ||
+    jaVoices.find((v) => v.lang === "ja-JP") ||
+    jaVoices[0];
 }
 
 // 初期化：声の準備。ページ読み込み時に1回呼ぶ
@@ -34,7 +42,7 @@ export function speak(text, rate = 0.85) {
   const utter = new SpeechSynthesisUtterance(text);
   utter.lang = "ja-JP";
   utter.rate = rate;
-  utter.pitch = 1.15; // 少し高めの声で子ども向けの明るい印象に
+  utter.pitch = 1.0; // 自然なピッチ（高すぎると機械っぽく聞こえるため）
   if (jaVoice) utter.voice = jaVoice;
   window.speechSynthesis.speak(utter);
 }

@@ -1,0 +1,47 @@
+# ============================================================
+# PRごとにプレビュー（ステージング）URLへ自動デプロイする
+#   - PRオープン/更新時 → プレビューURLにデプロイしてPRにコメント
+#   - PRクローズ時 → プレビューを削除
+#
+# 初回のみ Pages ソースを gh-pages ブランチに変更する必要あり（自動で実行）
+# ============================================================
+name: PR Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+
+concurrency: preview-${{ github.ref }}
+
+permissions:
+  contents: write
+  pull-requests: write
+  pages: write
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Pages ソースが gh-pages ブランチでなければ自動で切り替える（初回のみ効く）
+      - name: Pages ソースを gh-pages に設定（初回のみ）
+        if: github.event.action != 'closed'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # 現在のソースを確認
+          CURRENT=$(gh api repos/${{ github.repository }}/pages --jq '.source.branch' 2>/dev/null || echo "none")
+          if [ "$CURRENT" != "gh-pages" ]; then
+            echo "Pages ソースを gh-pages に切り替えます（現在: ${CURRENT}）..."
+            gh api repos/${{ github.repository }}/pages -X PUT \
+              -F source[branch]=gh-pages -F source[path]=/ 2>/dev/null || \
+            echo "⚠️ Pages ソースの自動切替に失敗。手動で Settings > Pages > Source を gh-pages に変更してください。"
+          else
+            echo "Pages ソースは既に gh-pages です。"
+          fi
+
+      # PRプレビューをデプロイ（pr-preview/pr-N/ にサイトを配置してPRにリンクをコメント）
+      - uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: .
