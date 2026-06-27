@@ -1,9 +1,11 @@
 // ============================================================
 // 効果音（Web Audio API で生成）
 // 音声ファイルを持たずに、コードで「ピンポーン♪」等を鳴らす
+// ミュート時は何も鳴らさない
 // ============================================================
 
 let audioCtx = null;
+let muted = false; // true のときは効果音を鳴らさない
 
 // AudioContext を用意（ユーザー操作後でないと再生できないため遅延生成）
 function getCtx() {
@@ -35,8 +37,12 @@ function tone(freq, startTime, duration, type = "sine", gainPeak = 0.25) {
   osc.stop(startTime + duration);
 }
 
+// ミュート状態を外部から設定する
+export function setAudioMuted(m) { muted = m; }
+
 // 成功音（明るい上昇アルペジオ：ド→ミ→ソ→ド）
 export function playSuccess() {
+  if (muted) return; // ミュート中は鳴らさない
   const ctx = getCtx();
   if (!ctx) return;
   const t = ctx.currentTime;
@@ -46,6 +52,7 @@ export function playSuccess() {
 
 // タップ音（軽い「ポッ」）
 export function playTap() {
+  if (muted) return; // ミュート中は鳴らさない
   const ctx = getCtx();
   if (!ctx) return;
   tone(660, ctx.currentTime, 0.12, "sine", 0.18);

@@ -50,6 +50,28 @@ html, body {
   font-size: clamp(14px, 3vw, 18px);
   box-shadow: 0 3px 0 rgba(0,0,0,0.1);
 }
+/* クリア数と音トグルを横並びにする */
+.home-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+/* 効果音オン/オフ トグルボタン */
+.sound-toggle {
+  border: none;
+  background: var(--card);
+  font-size: clamp(22px, 5vw, 30px);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.1);
+  transition: transform 0.08s ease, opacity 0.2s;
+  line-height: 1;
+}
+.sound-toggle:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.1); }
+.sound-toggle.off { opacity: 0.5; } /* ミュート時は控えめな表示 */
 
 /* 五十音表：5列のグリッド */
 .gojuon {
