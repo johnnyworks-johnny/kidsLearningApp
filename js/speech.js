@@ -4,6 +4,7 @@
 // ============================================================
 
 let jaVoice = null; // 選ばれた日本語の声をキャッシュ
+let muted = false;  // true のときは読み上げをスキップ
 
 // 利用可能な声の一覧から、一番自然な日本語の声を選ぶ
 // ※iOS/Safari では声の読み込みが非同期なので voiceschanged を待つ
@@ -32,9 +33,13 @@ export function initSpeech() {
   window.speechSynthesis.onvoiceschanged = pickJapaneseVoice;
 }
 
+// ミュート状態を外部から設定する
+export function setSpeechMuted(m) { muted = m; }
+
 // テキストを読み上げる
 // rate: 読む速さ（子ども向けに少しゆっくりめが既定）
 export function speak(text, rate = 0.85) {
+  if (muted) return; // ミュート中は読み上げない
   if (!("speechSynthesis" in window)) return;
   // 連続タップで重ならないよう、再生中のものは止める
   window.speechSynthesis.cancel();
