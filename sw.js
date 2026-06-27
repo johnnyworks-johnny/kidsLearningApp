@@ -3,7 +3,7 @@
 // （iPadで「ホーム画面に追加」したあと、ネットがなくても起動できる）
 // ============================================================
 
-const CACHE = "hiragana-v2"; // 中身を更新したらバージョンを上げる
+const CACHE = "hiragana-v3"; // v3: PNGアイコン追加
 
 // 最初にキャッシュしておくファイル一覧
 const ASSETS = [
@@ -19,6 +19,9 @@ const ASSETS = [
   "./js/strokeAnim.js",
   "./manifest.webmanifest",
   "./icons/icon.svg",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png",
+  "./icons/apple-touch-icon.png",
 ];
 
 // インストール時：必要なファイルをまとめて保存
