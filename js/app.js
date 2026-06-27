@@ -5,6 +5,7 @@ import { GOJUON_ROWS, HIRAGANA, KANA_ORDER } from "./data.js";
 import { initSpeech, speak } from "./speech.js";
 import { playSuccess, playTap } from "./audio.js";
 import { TracePad } from "./trace.js";
+import { StrokeAnimator } from "./strokeAnim.js";
 
 const STORAGE_KEY = "hiragana-progress-v1";
 
@@ -23,6 +24,7 @@ function saveProgress(p) {
 let progress = loadProgress();
 let currentKana = null;
 let pad = null;
+let strokeAnimator = null; // 書き順アニメーション
 
 // 主要なDOM要素
 const el = {
@@ -99,11 +101,19 @@ function openPractice(kana) {
   }
   pad.setChar(kana);
 
-  // 開いたら一度読み上げて、お手本の音を聞かせる
+  // 書き順アニメーション（初回のみ生成）
+  if (!strokeAnimator) {
+    strokeAnimator = new StrokeAnimator(document.getElementById("stroke-anim"));
+  }
+  strokeAnimator.setChar(kana);
+
+  // 開いたら読み上げてから、書き順アニメを一度自動再生して見せる
   speak(info.say);
+  strokeAnimator.play();
 }
 
 function backToHome() {
+  if (strokeAnimator) strokeAnimator.stop(); // 再生中の書き順アニメを止める
   el.practice.classList.remove("active");
   el.home.classList.add("active");
   buildHome(); // ⭐の表示を更新
@@ -213,6 +223,10 @@ function wireButtons() {
   });
   document.getElementById("btn-speak").addEventListener("click", () => {
     if (currentKana) speak(HIRAGANA[currentKana].say);
+  });
+  document.getElementById("btn-stroke").addEventListener("click", () => {
+    // 書き順アニメをもう一度見せる
+    if (strokeAnimator) strokeAnimator.play();
   });
   document.getElementById("btn-clear").addEventListener("click", () => {
     playTap();
