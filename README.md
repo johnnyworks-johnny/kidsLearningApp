@@ -25,6 +25,12 @@ python3 -m http.server 8080
 iPadで使う場合は、同じWi-Fi内のPCのIPアドレス（例 `http://192.168.x.x:8080`）にアクセスし、
 Safariの「共有」→「ホーム画面に追加」でアプリのように使えます。
 
+## ☁️ 公開（ホスティング）
+
+Firebase Hosting で公開できます（HTTPS自動・PWA対応・無料枠）。
+`main` への push で GitHub Actions が自動デプロイする構成が入っています。
+初回セットアップ手順は [docs/HOSTING.md](docs/HOSTING.md) を参照。
+
 ## 📁 構成
 
 ```

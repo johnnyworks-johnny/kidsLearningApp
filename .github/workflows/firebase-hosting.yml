@@ -1,0 +1,28 @@
+# ============================================================
+# main ブランチに push されたら Firebase Hosting に自動デプロイする
+#   必要な設定（GitHubリポジトリ側）:
+#     - 変数  FIREBASE_PROJECT_ID    … FirebaseプロジェクトID
+#     - シークレット FIREBASE_SERVICE_ACCOUNT … サービスアカウントのJSON鍵
+#   ※ この2つが未設定の間は job がスキップされ、赤いエラーにはなりません
+#   設定手順は docs/HOSTING.md を参照
+# ============================================================
+name: Deploy to Firebase Hosting
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    # 必要な設定がそろっている時だけ実行する（未設定なら静かにスキップ）
+    if: ${{ vars.FIREBASE_PROJECT_ID != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # 静的サイトなのでビルド不要。そのまま Hosting へデプロイ
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: ${{ vars.FIREBASE_PROJECT_ID }}
+          channelId: live
