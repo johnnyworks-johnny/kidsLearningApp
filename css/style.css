@@ -26,6 +26,9 @@ html, body {
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+  /* iOSで文字サイズが勝手に拡大されないようにする */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 /* 画面の切り替え（active なものだけ表示） */

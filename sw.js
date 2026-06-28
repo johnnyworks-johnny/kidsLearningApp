@@ -3,7 +3,7 @@
 // （iPadで「ホーム画面に追加」したあと、ネットがなくても起動できる）
 // ============================================================
 
-const CACHE = "hiragana-v3"; // v3: PNGアイコン追加
+const CACHE = "hiragana-v4"; // v4: 画面拡大の無効化(noZoom)追加
 
 // 最初にキャッシュしておくファイル一覧
 const ASSETS = [
@@ -17,6 +17,7 @@ const ASSETS = [
   "./js/trace.js",
   "./js/strokes.js",
   "./js/strokeAnim.js",
+  "./js/noZoom.js",
   "./manifest.webmanifest",
   "./icons/icon.svg",
   "./icons/icon-192.png",
