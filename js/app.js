@@ -6,6 +6,7 @@ import { initSpeech, speak, setSpeechMuted } from "./speech.js";
 import { playSuccess, playTap, setAudioMuted } from "./audio.js";
 import { TracePad } from "./trace.js";
 import { StrokeAnimator } from "./strokeAnim.js";
+import { disableZoom } from "./noZoom.js";
 
 const STORAGE_KEY = "hiragana-progress-v1";
 const SOUND_KEY = "hiragana-sound-v1"; // 音の設定保存キー
@@ -273,6 +274,7 @@ function wireButtons() {
 }
 
 function init() {
+  disableZoom(); // ダブルタップ/ピンチによる画面拡大を無効化（iPad対策）
   initSpeech();
   // 前回の音設定を復元（ミュートしていた場合はそのまま維持）
   applySoundSetting(loadSoundSetting());
